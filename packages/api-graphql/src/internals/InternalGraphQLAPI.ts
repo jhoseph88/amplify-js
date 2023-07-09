@@ -8,6 +8,7 @@ import {
 	GraphQLError,
 	OperationTypeNode,
 } from 'graphql';
+import fetchAdapter  from '@vespaiach/axios-fetch-adapter';
 import Observable from 'zen-observable-ts';
 import {
 	Amplify,
@@ -107,6 +108,9 @@ export class InternalGraphQLAPIClass {
 	createInstance() {
 		logger.debug('create Rest instance');
 		if (this._options) {
+			// hardcode adapter to fetchAdapter so the RestClient can be used in a Chrome service worker
+			// see https://github.com/aws-amplify/amplify-js/issues/10468
+			this._options.adapter = fetchAdapter;
 			this._api = new RestClient(this._options);
 			// Share instance Credentials with client for SSR
 			this._api.Credentials = this.Credentials;
